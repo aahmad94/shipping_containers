@@ -1,5 +1,13 @@
-import { fetchContainers } from './containers_utils';
+import * as ContainerUtils from './containers_utils';
 
-export const FETCH_CONTAINERS = "FETCH_CONTAINERS";
+export const RECEIVE_CONTAINERS = "RECEIVE_CONTAINERS";
 
-// export const fetchContainers 
+export const receiveContainers = containers => ({
+  type: RECEIVE_CONTAINERS,
+  containers
+});
+
+export const fetchContainers = () => dispatch => (
+  ContainerUtils.fetchContainers()
+    .then( containers => dispatch(receiveContainers(containers)))
+);

@@ -9,8 +9,8 @@ let preloadedState = {};
 const store = configureStore(preloadedState);
 
 // test
-import { fetchContainers } from './actions/containers/containers_utils';
-import { fetchVessels } from './actions/vessels/vessels_utils';
+import { fetchContainers } from './actions/containers/containers_actions';
+import { fetchVessels } from './actions/vessels/vessels_actions';
 
 window.store = store;
 window.fetchContainers = fetchContainers;
