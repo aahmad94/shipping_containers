@@ -13,7 +13,7 @@ export default ({ id, containerNumber, vessels, handleSelect }) => {
       </td>
       <td className='container-item-vessels'>
         <select onChange={ e => handleSelect(id, e.target.value) }>
-          <option value="" selected disabled hidden>Select vessel</option>
+          <option defaultvalue="" hidden>Select vessel</option>
           {
             vessels.map( vessel => {
               return (

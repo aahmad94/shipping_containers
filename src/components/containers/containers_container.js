@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+
 import { removeContainers } from './../../actions/containers/containers_actions';
 import { fetchContainers } from './../../actions/containers/containers_actions';
 import { fetchVessels } from './../../actions/vessels/vessels_actions';
@@ -16,9 +16,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     removeContainers: (containerIds) => dispatch(removeContainers(containerIds)),
     fetchContainers: () => dispatch(fetchContainers()),
     fetchVessels: () => dispatch(fetchVessels()),
-    createPlan: () => dispatch(createPlan())
+    createPlan: (payload) => dispatch(createPlan(payload))
   };
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Containers));
+export default connect(mapStateToProps, mapDispatchToProps)(Containers);

@@ -71,21 +71,20 @@
 	
 	var _root2 = _interopRequireDefault(_root);
 	
-	var _containers_actions = __webpack_require__(204);
-	
-	var _vessels_actions = __webpack_require__(233);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var preloadedState = {};
 	var store = (0, _store2.default)(preloadedState);
 	
 	// test
+	// import { fetchContainers } from './actions/containers/containers_actions';
+	// import { fetchVessels } from './actions/vessels/vessels_actions';
+	// import { createPlan } from './actions/plans/plans_actions';
 	
-	
-	window.store = store;
-	window.fetchContainers = _containers_actions.fetchContainers;
-	window.fetchVessels = _vessels_actions.fetchVessels;
+	// window.store = store;
+	// window.fetchContainers = fetchContainers;
+	// window.fetchVessels = fetchVessels;
+	// window.createPlan = createPlan;
 	
 	_reactDom2.default.render(_react2.default.createElement(_root2.default, { store: store }), document.querySelector('.container'));
 
@@ -35949,7 +35948,7 @@
 	
 	var _plans_actions = __webpack_require__(236);
 	
-	var initialState = {};
+	var initialState = [];
 	
 	var plansReducer = function plansReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
@@ -35958,14 +35957,16 @@
 	  Object.freeze(state);
 	  switch (action.type) {
 	    case _plans_actions.FETCH_PLANS:
-	      var newState = (0, _lodash.merge)({}, state);
-	      var payload = action.payload;
-	      var vesselId = Object.keys[payload][0];
-	      if (newState[vesselId]) {
-	        newState[vesselId].concat(payload[vesselId]);
-	      } else {
-	        newState[vesselId] = payload[vesselId];
-	      }
+	      return action.vesselPlans.data;
+	    case _plans_actions.CREATE_PLAN:
+	      var newState = (0, _lodash.merge)([], state);
+	      var vesselPlan = action.vesselPlan.data;
+	      var vesselId = vesselPlan.vessel_id;
+	      var vesselContainers = vesselPlan.container_ids;
+	      newState.push({
+	        "vessel_id": vesselId,
+	        "container_ids": vesselContainers
+	      });
 	      return newState;
 	    default:
 	      return state;
@@ -35983,7 +35984,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.createPlan = exports.FETCH_PLANS = exports.CREATE_PLAN = undefined;
+	exports.fetchPlans = exports.createPlan = exports.receivePlan = exports.FETCH_PLANS = exports.CREATE_PLAN = undefined;
 	
 	var _plans_utils = __webpack_require__(237);
 	
@@ -35994,6 +35995,13 @@
 	var CREATE_PLAN = exports.CREATE_PLAN = "CREATE_PLAN";
 	var FETCH_PLANS = exports.FETCH_PLANS = "FETCH_PLANS";
 	
+	var receivePlan = exports.receivePlan = function receivePlan(vesselPlan) {
+	  return {
+	    type: CREATE_PLAN,
+	    vesselPlan: vesselPlan
+	  };
+	};
+	
 	var receivePlans = function receivePlans(vesselPlans) {
 	  return {
 	    type: FETCH_PLANS,
@@ -36003,7 +36011,17 @@
 	
 	var createPlan = exports.createPlan = function createPlan(payload) {
 	  return function (dispatch) {
-	    return PlansUtils.createPlan(payload);
+	    return PlansUtils.createPlan(payload).then(function (vesselPlan) {
+	      return dispatch(receivePlan(vesselPlan));
+	    });
+	  };
+	};
+	
+	var fetchPlans = exports.fetchPlans = function fetchPlans() {
+	  return function (dispatch) {
+	    return PlansUtils.fetchPlans().then(function (vesselPlans) {
+	      return dispatch(receivePlans(vesselPlans));
+	    });
 	  };
 	};
 
@@ -36016,7 +36034,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.createPlan = undefined;
+	exports.fetchPlans = exports.createPlan = undefined;
 	
 	var _axios = __webpack_require__(206);
 	
@@ -36027,7 +36045,15 @@
 	var url = "http://127.0.0.1:8000/vessel_plans";
 	
 	var createPlan = exports.createPlan = function createPlan(payload) {
-	  return _axios2.default.post(url, payload);
+	  return _axios2.default.post(url, payload).then(function (resp) {
+	    return resp;
+	  });
+	};
+	
+	var fetchPlans = exports.fetchPlans = function fetchPlans() {
+	  return _axios2.default.get(url).then(function (resp) {
+	    return resp;
+	  });
 	};
 
 /***/ }),
@@ -40540,13 +40566,18 @@
 	
 	var _containers_container2 = _interopRequireDefault(_containers_container);
 	
+	var _plans_container = __webpack_require__(290);
+	
+	var _plans_container2 = _interopRequireDefault(_plans_container);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var App = function App() {
 	  return _react2.default.createElement(
 	    'div',
 	    { className: 'app' },
-	    _react2.default.createElement(_containers_container2.default, null)
+	    _react2.default.createElement(_containers_container2.default, null),
+	    _react2.default.createElement(_plans_container2.default, null)
 	  );
 	};
 	
@@ -40563,8 +40594,6 @@
 	});
 	
 	var _reactRedux = __webpack_require__(160);
-	
-	var _reactRouterDom = __webpack_require__(240);
 	
 	var _containers_actions = __webpack_require__(204);
 	
@@ -40596,13 +40625,13 @@
 	    fetchVessels: function fetchVessels() {
 	      return dispatch((0, _vessels_actions.fetchVessels)());
 	    },
-	    createPlan: function createPlan() {
-	      return dispatch((0, _plans_actions.createPlan)());
+	    createPlan: function createPlan(payload) {
+	      return dispatch((0, _plans_actions.createPlan)(payload));
 	    }
 	  };
 	};
 	
-	exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_containers2.default));
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_containers2.default);
 
 /***/ }),
 /* 288 */
@@ -40700,11 +40729,8 @@
 	        });
 	      });
 	
-	      // post request
-	      console.log({ payloads: payloads });
-	      console.log(JSON.stringify(payloads[0]));
 	      Promise.all(payloads.map(function (payload) {
-	        return _this3.props.createPlan(JSON.stringify(payload));
+	        return _this3.props.createPlan(payload);
 	      })).then(this.props.removeContainers(containerIds), function (err) {
 	        return console.log(err);
 	      });
@@ -40717,8 +40743,19 @@
 	      if (this.state.loading) {
 	        return _react2.default.createElement(
 	          'div',
-	          null,
-	          'Loading'
+	          { className: 'sk-fading-circle' },
+	          _react2.default.createElement('div', { className: 'sk-circle1 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle2 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle3 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle4 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle5 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle6 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle7 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle8 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle9 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle10 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle11 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle12 sk-circle' })
 	        );
 	      } else {
 	        return _react2.default.createElement(
@@ -40829,7 +40866,7 @@
 	          } },
 	        _react2.default.createElement(
 	          'option',
-	          { value: '', selected: true, disabled: true, hidden: true },
+	          { defaultvalue: '', hidden: true },
 	          'Select vessel'
 	        ),
 	        vessels.map(function (vessel) {
@@ -40842,6 +40879,217 @@
 	          );
 	        })
 	      )
+	    )
+	  );
+	};
+
+/***/ }),
+/* 290 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _reactRedux = __webpack_require__(160);
+	
+	var _plans_actions = __webpack_require__(236);
+	
+	var _plans = __webpack_require__(291);
+	
+	var _plans2 = _interopRequireDefault(_plans);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state, ownProps) {
+	  return {
+	    plans: state.entities.plans
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+	  return {
+	    fetchPlans: function fetchPlans() {
+	      return dispatch((0, _plans_actions.fetchPlans)());
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_plans2.default);
+
+/***/ }),
+/* 291 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(159);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _plan_item = __webpack_require__(292);
+	
+	var _plan_item2 = _interopRequireDefault(_plan_item);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Containers = function (_Component) {
+	  _inherits(Containers, _Component);
+	
+	  function Containers(props) {
+	    _classCallCheck(this, Containers);
+	
+	    var _this = _possibleConstructorReturn(this, (Containers.__proto__ || Object.getPrototypeOf(Containers)).call(this, props));
+	
+	    _this.state = {
+	      loading: true
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(Containers, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var _this2 = this;
+	
+	      this.props.fetchPlans().then(function () {
+	        return _this2.setState({ loading: false });
+	      });
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      if (!this.state.loading) {
+	        this.scrollToBottom();
+	      }
+	    }
+	  }, {
+	    key: 'scrollToBottom',
+	    value: function scrollToBottom() {
+	      this.el.scrollIntoView({ behaviour: 'smooth' });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this3 = this;
+	
+	      if (this.state.loading) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'sk-fading-circle' },
+	          _react2.default.createElement('div', { className: 'sk-circle1 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle2 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle3 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle4 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle5 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle6 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle7 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle8 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle9 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle10 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle11 sk-circle' }),
+	          _react2.default.createElement('div', { className: 'sk-circle12 sk-circle' })
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'plans-component' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'plans-table-title' },
+	            'Submissions'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'plans-table-header' },
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              'Vessel Id'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              'Container Ids'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'table',
+	            { className: 'plans-table' },
+	            _react2.default.createElement(
+	              'tbody',
+	              null,
+	              this.props.plans.map(function (plan, idx) {
+	                return _react2.default.createElement(_plan_item2.default, {
+	                  key: idx,
+	                  vesselId: plan.vessel_id,
+	                  containers: plan.container_ids });
+	              }),
+	              _react2.default.createElement('tr', { ref: function ref(el) {
+	                  _this3.el = el;
+	                } })
+	            )
+	          )
+	        );
+	      }
+	    }
+	  }]);
+	
+	  return Containers;
+	}(_react.Component);
+	
+	exports.default = Containers;
+
+/***/ }),
+/* 292 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function (_ref) {
+	  var vesselId = _ref.vesselId,
+	      containers = _ref.containers;
+	
+	  return _react2.default.createElement(
+	    'tr',
+	    { className: 'plans-table-item' },
+	    _react2.default.createElement(
+	      'td',
+	      { className: 'pi-vessel-id' },
+	      vesselId
+	    ),
+	    _react2.default.createElement(
+	      'td',
+	      { className: 'pi-containers' },
+	      containers.join(", ")
 	    )
 	  );
 	};

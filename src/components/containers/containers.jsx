@@ -54,18 +54,26 @@ class Containers extends Component {
       );
     });
 
-    // post request
-    console.log({payloads});
-    console.log(JSON.stringify(payloads[0]));
-    Promise.all(payloads.map( payload => this.props.createPlan(JSON.stringify(payload))))
+    Promise.all(payloads.map( payload => this.props.createPlan(payload)))
       .then(this.props.removeContainers(containerIds), err => console.log(err));
   }
 
   render() {
     if (this.state.loading) {
       return (
-        <div>
-          Loading
+        <div className="sk-fading-circle">
+          <div className="sk-circle1 sk-circle"></div>
+          <div className="sk-circle2 sk-circle"></div>
+          <div className="sk-circle3 sk-circle"></div>
+          <div className="sk-circle4 sk-circle"></div>
+          <div className="sk-circle5 sk-circle"></div>
+          <div className="sk-circle6 sk-circle"></div>
+          <div className="sk-circle7 sk-circle"></div>
+          <div className="sk-circle8 sk-circle"></div>
+          <div className="sk-circle9 sk-circle"></div>
+          <div className="sk-circle10 sk-circle"></div>
+          <div className="sk-circle11 sk-circle"></div>
+          <div className="sk-circle12 sk-circle"></div>
         </div>
       ); 
     } else {
