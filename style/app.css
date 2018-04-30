@@ -32,6 +32,7 @@
   min-width: 20vw;
 }
 
+.containers-table-title, 
 .plans-table-title {
   display: inline-flex;
   align-self: center;

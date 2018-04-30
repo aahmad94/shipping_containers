@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 
 
 import ContainerItem from './container_item';
+import LoadingCircles from '../ui/loading_circles';
+
 
 class Containers extends Component {
   constructor(props) {
@@ -61,24 +63,12 @@ class Containers extends Component {
   render() {
     if (this.state.loading) {
       return (
-        <div className="sk-fading-circle">
-          <div className="sk-circle1 sk-circle"></div>
-          <div className="sk-circle2 sk-circle"></div>
-          <div className="sk-circle3 sk-circle"></div>
-          <div className="sk-circle4 sk-circle"></div>
-          <div className="sk-circle5 sk-circle"></div>
-          <div className="sk-circle6 sk-circle"></div>
-          <div className="sk-circle7 sk-circle"></div>
-          <div className="sk-circle8 sk-circle"></div>
-          <div className="sk-circle9 sk-circle"></div>
-          <div className="sk-circle10 sk-circle"></div>
-          <div className="sk-circle11 sk-circle"></div>
-          <div className="sk-circle12 sk-circle"></div>
-        </div>
+        <LoadingCircles />
       ); 
     } else {
       return (
         <form className='containers-form'> 
+          <div className='containers-table-title'>Allocate Containers</div>
           <div className='containers-table-header'>
             <div className = 'cth-id'>Id</div>
             <div className='cth-number'>Container #</div>
