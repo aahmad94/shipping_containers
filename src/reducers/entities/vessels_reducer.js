@@ -4,7 +4,7 @@ import {
 
 const initialState = {};
 
-const containersReducer = (state = initialState, action) => {
+const vesselsReducer = (state = initialState, action) => {
   Object.freeze(state);
   switch (action.type) {
     case RECEIVE_VESSELS:
@@ -14,4 +14,4 @@ const containersReducer = (state = initialState, action) => {
   }
 };
 
-export default containersReducer;
+export default vesselsReducer;

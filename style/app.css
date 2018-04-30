@@ -1,0 +1,134 @@
+.app {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  min-width: 100vw;
+  max-width: 100vw;
+  min-height: 100vh;
+  max-height: 100vh;
+}
+
+.containers-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  border: 1px solid #333;
+  border-radius: 5px;
+
+  min-height: 30vh;
+  max-height: 600px;
+  min-width: 40vw;
+
+
+  padding: 25px 25px 25px 25px;
+}
+
+.containers-table-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 25px 0;
+  width: 80%;
+}
+
+.containers-table {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  
+  border: 1px solid #333;
+  border-radius: 5px;
+
+  overflow-y: scroll;
+  min-height: calc(100%);
+  max-height: calc(100%);
+  min-width: calc(80%);
+
+  padding: 10px 0 10px 0;
+}
+
+/* ---------------- scroll ----------------- */
+
+.containers-table::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+
+.containers-table::-webkit-scrollbar-track {
+  background: #f9f9f9;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+/* Handle */
+
+.containers-table::-webkit-scrollbar-thumb {
+  background-color: rgba(113, 114, 116, .5);
+  background-clip: padding-box !important;
+  border-radius: 3px;
+  color: #717274;
+  min-height: 36px;
+}
+
+.containers-table::-webkit-scrollbar-thumb:window-inactive {
+  background: #d9d9de;
+}
+
+/* ---------------- scroll ----------------- */
+
+tbody {
+  width: 100%;
+}
+
+.containers-table-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.containers-table-item select {
+  width: 125px;
+  text-overflow: ellipsis;
+}
+
+.containers-form-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  max-width: 120px;
+  padding: 10px 20px 10px 20px;
+
+  background: #1c299d;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+  box-shadow: none;
+
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+
+  margin-top: 25px;
+}
+
+.containers-form-btn:active {
+  box-shadow: 0 1px #bbbbbb;
+  transform: translateY(1px);
+}
+
+.containers-form-btn:focus {
+  outline: none;
+}
