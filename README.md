@@ -1,5 +1,9 @@
 # ClearMetal Challenge
 
+### User Interface
+
+![ui](./assets/images/organize_components.gif)
+
 Imagine you work at a port and are in charge of vessel allocations. Each day, you are given
  a list of containers that need to be shipped and a list of vessels that are leaving that day. You need to assign the 
  containers to those vessels so that they can get to their final destinations.  

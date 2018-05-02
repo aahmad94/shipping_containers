@@ -58,6 +58,11 @@ class Containers extends Component {
 
     Promise.all(payloads.map( payload => this.props.createPlan(payload)))
       .then(this.props.removeContainers(containerIds), err => console.log(err));
+
+    this.setState({
+      loading: false,
+      containersMap: {}
+    });
   }
 
   render() {
