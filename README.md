@@ -84,8 +84,7 @@ Each container item has an event handler for handleSelect which sets a new local
             containerNumber={container.container_number}
             vessels={this.props.vessels}
             handleSelect={ (containerId, vesselId) =>
-              this.handleSelect(containerId, vesselId) }
-              />
+              this.handleSelect(containerId, vesselId) } />
             );
           }
         )
@@ -113,8 +112,9 @@ handleSubmit(e) {
   vesselIds.forEach( vesselId => {
     uniqVesselIds.add(vesselId);
     vesselsMap[vesselId] = [];
-    } 
+    }
   );
+
   containerIds.forEach( containerId => {
     const shippingVesselId = this.state.containersMap[containerId];
     vesselsMap[shippingVesselId].push(containerId);
@@ -122,10 +122,8 @@ handleSubmit(e) {
 
   uniqVesselIds.forEach( vesselId => {
     payloads.push(
-      {
-        "vessel_id": vesselId,
-        "container_ids": vesselsMap[vesselId]
-      }
+      { "vessel_id": vesselId,
+        "container_ids": vesselsMap[vesselId] }
     );
   });
 
