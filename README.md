@@ -109,6 +109,7 @@ handleSubmit(e) {
   const containerIds = Object.keys(this.state.containersMap).map(id => parseInt(id));
   const vesselIds = Object.values(this.state.containersMap).map(id => parseInt(id));
   const uniqVesselIds = new Set();
+  
   vesselIds.forEach( vesselId => {
     uniqVesselIds.add(vesselId);
     vesselsMap[vesselId] = [];
