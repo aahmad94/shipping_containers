@@ -56,7 +56,7 @@ class Containers extends Component {
                   }
                 )
               }
-            <tr ref={el => { this.el = el; }}></tr>
+              <tr ref={el => { this.el = el; }}></tr>
             </tbody>
           </table>
         </div>
