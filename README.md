@@ -109,7 +109,7 @@ handleSubmit(e) {
   const containerIds = Object.keys(this.state.containersMap).map(id => parseInt(id));
   const vesselIds = Object.values(this.state.containersMap).map(id => parseInt(id));
   const uniqVesselIds = new Set();
-  
+
   vesselIds.forEach( vesselId => {
     uniqVesselIds.add(vesselId);
     vesselsMap[vesselId] = [];
@@ -213,7 +213,7 @@ export const fetchPlans = () => dispatch => (
 );
 ```
 
-The front-end slice of state for plans is initialized via the asynchronus *fetchPlans* thunk action creator in the plans component *componentWillMount* lifecycle method -- no additional *GET* requests are made for plans since the reducer below will ensure the plans slice of reflects the user's changes:
+The front-end slice of state for plans is initialized via the asynchronus *fetchPlans* thunk action creator in the plans component *componentWillMount* lifecycle method -- no additional *GET* requests are made for plans since the reducer below will ensure the plans slice of state reflects the user's changes:
 
 ```javascript
 const plansReducer = (state = initialState, action) => {
